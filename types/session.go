@@ -1,4 +1,40 @@
 package types
 
+import (
+	"fmt"
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
 type Session struct {
+	ID        primitive.ObjectID `bson:"_id,omitempty" json:"ID,omitempty"`
+	Recruiter primitive.ObjectID `bson:"Recruiter" json:"Recruiter"`
+	JobSeeker primitive.ObjectID `bson:"JobSeeker" json:"JobSeeker"`
+	Open      bool               `bson:"Open" json:"Open"`
+	Created   time.Time          `bson:"Created" json:"Created"`
+}
+type CreateSessionParams struct {
+	ID        string `json:"ID,omitempty"`
+	Recruiter string `json:"Recruiter"`
+	JobSeeker string `json:"JobSeeker"`
+	Open      bool   `json:"Open"`
+}
+
+func (c *CreateSessionParams) FromParams() (*Session, error) {
+	oidRecruiter, err := primitive.ObjectIDFromHex(c.Recruiter)
+	if err != nil {
+		return nil, fmt.Errorf("invalid user")
+
+	}
+	oidJobSeeker, err := primitive.ObjectIDFromHex(c.JobSeeker)
+	if err != nil {
+		return nil, fmt.Errorf("invalid jobseeker")
+	}
+	return &Session{
+		Recruiter: oidRecruiter,
+		JobSeeker: oidJobSeeker,
+		Open:      true,
+		Created:   time.Now(),
+	}, nil
 }
