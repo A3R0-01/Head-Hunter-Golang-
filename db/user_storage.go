@@ -29,15 +29,13 @@ type MongoUserStorage struct {
 	coll   *mongo.Collection
 }
 
-func NewMongoUserStore() *MongoUserStorage {
-	client := NewMongoClient()
+func NewMongoUserStore(client *mongo.Client) *MongoUserStorage {
 	return &MongoUserStorage{
 		client: client,
 		coll:   client.Database(DBNAME).Collection(UserCollName),
 	}
 }
-func NewMongoUserStoreTest() *MongoUserStorage {
-	client := NewMongoClient()
+func NewMongoUserStoreTest(client *mongo.Client) *MongoUserStorage {
 	return &MongoUserStorage{
 		client: client,
 		coll:   client.Database(TestDBNAME).Collection(UserCollName),

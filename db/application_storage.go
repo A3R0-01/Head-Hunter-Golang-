@@ -10,14 +10,32 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+const ApplicationCollName = "Applications"
+
 type ApplicationStore interface {
 	GetApplicationByID(context.Context, string) (*types.Application, error)
 	GetApplications(context.Context, Map) ([]*types.Application, error)
 	CreateApplication(context.Context, *types.Application) (*types.Application, error)
 	DeleteApplication(context.Context, string) error
 }
+type MongoApplicationStore struct {
+	client *mongo.Client
+	coll   *mongo.Collection
+}
 
-func (store *MongoUserStorage) GetApplicationByID(ctx context.Context, id string) (*types.Application, error) {
+func NewMongApplicationrStore(client *mongo.Client) *MongoApplicationStore {
+	return &MongoApplicationStore{
+		client: client,
+		coll:   client.Database(DBNAME).Collection(ApplicationCollName),
+	}
+}
+func NewMongoApplicationStoreTest(client *mongo.Client) *MongoApplicationStore {
+	return &MongoApplicationStore{
+		client: client,
+		coll:   client.Database(TestDBNAME).Collection(ApplicationCollName),
+	}
+}
+func (store *MongoApplicationStore) GetApplicationByID(ctx context.Context, id string) (*types.Application, error) {
 
 	oid, err := primitive.ObjectIDFromHex(id)
 
@@ -30,7 +48,7 @@ func (store *MongoUserStorage) GetApplicationByID(ctx context.Context, id string
 	}
 	return &application, nil
 }
-func (store *MongoUserStorage) GetApplications(ctx context.Context, filter Map) ([]*types.Application, error) {
+func (store *MongoApplicationStore) GetApplications(ctx context.Context, filter Map) ([]*types.Application, error) {
 
 	cur, err := store.coll.Find(ctx, filter)
 	if err != nil {
@@ -43,7 +61,7 @@ func (store *MongoUserStorage) GetApplications(ctx context.Context, filter Map) 
 	return applications, nil
 }
 
-func (store *MongoUserStorage) CreateApplication(ctx context.Context, application *types.Application) (*types.Application, error) {
+func (store *MongoApplicationStore) CreateApplication(ctx context.Context, application *types.Application) (*types.Application, error) {
 	result, err := store.coll.InsertOne(ctx, application)
 	if err != nil {
 		return nil, err
@@ -52,7 +70,7 @@ func (store *MongoUserStorage) CreateApplication(ctx context.Context, applicatio
 	return application, nil
 }
 
-func (store *MongoUserStorage) DeleteApplication(ctx context.Context, id string) error {
+func (store *MongoApplicationStore) DeleteApplication(ctx context.Context, id string) error {
 	oid, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {

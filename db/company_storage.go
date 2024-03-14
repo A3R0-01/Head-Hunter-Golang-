@@ -29,15 +29,13 @@ type MongoCompanyStorage struct {
 	coll   *mongo.Collection
 }
 
-func NewMongoCompanyStore() *MongoCompanyStorage {
-	client := NewMongoClient()
+func NewMongoCompanyStore(client *mongo.Client) *MongoCompanyStorage {
 	return &MongoCompanyStorage{
 		client: client,
 		coll:   client.Database(DBNAME).Collection(CompanyCollName),
 	}
 }
-func NewMongoCompanyStoreTest() *MongoCompanyStorage {
-	client := NewMongoClient()
+func NewMongoCompanyStoreTest(client *mongo.Client) *MongoCompanyStorage {
 	return &MongoCompanyStorage{
 		client: client,
 		coll:   client.Database(TestDBNAME).Collection(CompanyCollName),
