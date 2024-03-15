@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -14,7 +15,6 @@ const (
 type Industry struct {
 	ID      primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
 	Name    string             `bson:"Industry" json:"Industry"`
-	Users   int                `bson:"Users" json:"Users"`
 	Created time.Time          `bson:"Created" json:"Created"`
 }
 
@@ -28,7 +28,18 @@ func (c *CreateIndustryParams) FromParams() (*Industry, error) {
 	}
 	return &Industry{
 		Name:    c.Name,
-		Users:   0,
 		Created: time.Now(),
 	}, nil
+}
+
+type UpdateIndustryParams struct {
+	Name  string `bson:"Industry" json:"Industry"`
+	Users int    `bson:"Users" json:"Users"`
+}
+
+func (u *UpdateIndustryParams) ToMongoBson() {
+	values := bson.M{}
+	if len(u.Name) > minIndustryName {
+		values["Name"] = u.Name
+	}
 }
