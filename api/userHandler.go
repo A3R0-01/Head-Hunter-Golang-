@@ -36,3 +36,14 @@ func (h *UserHandler) HandlePostUser(c *fiber.Ctx) error {
 	}
 	return c.JSON(userCreated)
 }
+
+func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	user, err := h.store.UserStore.GetUserByID(c.Context(), id)
+	if err != nil {
+		return BadRequest(c, ErrorObject{Msg: err.Error(), Field: "error"})
+	}
+
+	return c.JSON(user)
+}

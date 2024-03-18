@@ -19,6 +19,7 @@ func main() {
 		userHandler = api.NewUserHandler(store, "user handler")
 	)
 	app.Post("/user", userHandler.HandlePostUser)
+	app.Get("/user/:id", userHandler.HandleGetUser)
 
 	app.Listen(os.Getenv("HTTP_LISTEN_ADDRESS"))
 
