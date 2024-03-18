@@ -18,8 +18,8 @@ type CompanyStore interface {
 	GetCompanyByID(context.Context, string) (*types.Company, error)
 	GetCompanies(context.Context, Map) ([]*types.Company, error)
 	CreateCompany(context.Context, *types.Company) (*types.Company, error)
-	CreateRecruiterToken(context.Context, *types.Company) (string, error)
-	GetRecruiters(context.Context, string) ([]*types.User, error)
+	// CreateRecruiterToken(context.Context, *types.Company) (string, error)
+	// GetRecruiters(context.Context, string) ([]*types.User, error)
 	DeleteCompany(context.Context, string) error
 	UpdateCompany(context.Context, string, types.UpdateCompanyParams) error
 }
@@ -29,13 +29,13 @@ type MongoCompanyStorage struct {
 	coll   *mongo.Collection
 }
 
-func NewMongoCompanyStore(client *mongo.Client) *MongoCompanyStorage {
+func NewMongoCompanyStore(client *mongo.Client) CompanyStore {
 	return &MongoCompanyStorage{
 		client: client,
 		coll:   client.Database(DBNAME).Collection(CompanyCollName),
 	}
 }
-func NewMongoCompanyStoreTest(client *mongo.Client) *MongoCompanyStorage {
+func NewMongoCompanyStoreTest(client *mongo.Client) CompanyStore {
 	return &MongoCompanyStorage{
 		client: client,
 		coll:   client.Database(TestDBNAME).Collection(CompanyCollName),
@@ -77,7 +77,7 @@ func (store *MongoCompanyStorage) CreateCompany(ctx context.Context, company *ty
 	return company, nil
 }
 
-func (store *MongoCompanyStorage) DeleteUser(ctx context.Context, id string) error {
+func (store *MongoCompanyStorage) DeleteCompany(ctx context.Context, id string) error {
 	oid, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {

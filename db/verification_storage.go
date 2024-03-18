@@ -23,13 +23,13 @@ type MongoVerificationStore struct {
 	coll   *mongo.Collection
 }
 
-func NewMongoVerification(client *mongo.Client) *MongoVerificationStore {
+func NewMongoVerificationStore(client *mongo.Client) VerificationStore {
 	return &MongoVerificationStore{
 		client: client,
 		coll:   client.Database(DBNAME).Collection(UserCollName),
 	}
 }
-func NewMongoVerificationTest(client *mongo.Client) *MongoVerificationStore {
+func NewMongoVerificationStoreTest(client *mongo.Client) VerificationStore {
 	return &MongoVerificationStore{
 		client: client,
 		coll:   client.Database(TestDBNAME).Collection(UserCollName),
@@ -71,7 +71,7 @@ func (store *MongoVerificationStore) CreateVerification(ctx context.Context, ver
 	return verification, nil
 }
 
-func (store *MongoVerificationStore) DeleteUser(ctx context.Context, id string) error {
+func (store *MongoVerificationStore) DeleteVerification(ctx context.Context, id string) error {
 	oid, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {

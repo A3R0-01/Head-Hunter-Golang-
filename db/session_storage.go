@@ -17,7 +17,7 @@ type SessionStore interface {
 	GetSessions(context.Context, Map) ([]*types.Session, error)
 	CreateSession(context.Context, *types.Session) (*types.Session, error)
 	UpdateSession(context.Context, string) error
-	DeleteSessions(context.Context, Map) error
+	DeleteSession(context.Context, string) error
 }
 
 type MongoSessionStore struct {
@@ -25,16 +25,16 @@ type MongoSessionStore struct {
 	coll   *mongo.Collection
 }
 
-func NewMongoSessionStore(client *mongo.Client) *MongoSessionStore {
+func NewMongoSessionStore(client *mongo.Client) SessionStore {
 	return &MongoSessionStore{
 		client: client,
 		coll:   client.Database(DBNAME).Collection(SessionCollName),
 	}
 }
-func NewMongoSessionStoreTest(client *mongo.Client) *MongoSessionStore {
+func NewMongoSessionStoreTest(client *mongo.Client) SessionStore {
 	return &MongoSessionStore{
 		client: client,
-		coll:   client.Database(TestDBNAME).Collection(UserCollName),
+		coll:   client.Database(TestDBNAME).Collection(SessionCollName),
 	}
 }
 
@@ -89,19 +89,15 @@ func (store *MongoSessionStore) DeleteSession(ctx context.Context, id string) er
 
 }
 
-// func (store *MongoSessionStore) UpdateSession(ctx context.Context, id string, values types.UpdateSessionParams) error {
-// 	updateVal, err := values.ToMongo()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	update := bson.D{"$set": updateVal}
-// 	oid, err := primitive.ObjectIDFromHex(id)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	_, err = store.coll.UpdateOne(ctx, bson.M{"_id": oid}, update)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func (store *MongoSessionStore) UpdateSession(ctx context.Context, id string) error {
+	update := bson.M{"$set": bson.M{"Open": false}}
+	oid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+	_, err = store.coll.UpdateOne(ctx, bson.M{"_id": oid}, update)
+	if err != nil {
+		return err
+	}
+	return nil
+}

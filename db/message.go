@@ -16,7 +16,7 @@ type MessageStore interface {
 	GetMessageByID(context.Context, string) (*types.Message, error)
 	GetMessages(context.Context, Map) ([]*types.Message, error)
 	CreateMessage(context.Context, *types.Message) (*types.Message, error)
-	DeleteMessages(context.Context, Map) error
+	DeleteMessages(context.Context, string) error
 }
 
 type MongoMessageStore struct {
@@ -24,13 +24,13 @@ type MongoMessageStore struct {
 	coll   *mongo.Collection
 }
 
-func NewMongoMessageStore(client *mongo.Client) *MongoMessageStore {
+func NewMongoMessageStore(client *mongo.Client) MessageStore {
 	return &MongoMessageStore{
 		client: client,
 		coll:   client.Database(DBNAME).Collection(MessageCollName),
 	}
 }
-func NewMongoMessageStoreTest(client *mongo.Client) *MongoMessageStore {
+func NewMongoMessageStoreTest(client *mongo.Client) MessageStore {
 	return &MongoMessageStore{
 		client: client,
 		coll:   client.Database(TestDBNAME).Collection(MessageCollName),
@@ -72,7 +72,7 @@ func (store *MongoMessageStore) CreateMessage(ctx context.Context, message *type
 	return message, nil
 }
 
-func (store *MongoMessageStore) DeleteMessage(ctx context.Context, id string) error {
+func (store *MongoMessageStore) DeleteMessages(ctx context.Context, id string) error {
 	oid, err := primitive.ObjectIDFromHex(id)
 
 	if err != nil {

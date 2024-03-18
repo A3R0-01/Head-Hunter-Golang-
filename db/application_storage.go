@@ -23,13 +23,13 @@ type MongoApplicationStore struct {
 	coll   *mongo.Collection
 }
 
-func NewMongApplicationrStore(client *mongo.Client) *MongoApplicationStore {
+func NewMongoApplicationStore(client *mongo.Client) ApplicationStore {
 	return &MongoApplicationStore{
 		client: client,
 		coll:   client.Database(DBNAME).Collection(ApplicationCollName),
 	}
 }
-func NewMongoApplicationStoreTest(client *mongo.Client) *MongoApplicationStore {
+func NewMongoApplicationStoreTest(client *mongo.Client) ApplicationStore {
 	return &MongoApplicationStore{
 		client: client,
 		coll:   client.Database(TestDBNAME).Collection(ApplicationCollName),

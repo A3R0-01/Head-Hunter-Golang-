@@ -4,14 +4,21 @@ import (
 	"log"
 	"os"
 
+	"github.com/A3R0-01/head-hunter/api"
+	"github.com/A3R0-01/head-hunter/db"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	// client := db.NewMongoClient()
+	client := db.NewMongoClient()
 
 	app := fiber.New()
+	var (
+		store       = db.NewStore(client)
+		userHandler = api.NewUserHandler(store, "user handler")
+	)
+	app.Post("/user", userHandler.HandlePostUser)
 
 	app.Listen(os.Getenv("HTTP_LISTEN_ADDRESS"))
 

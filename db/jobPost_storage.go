@@ -13,7 +13,6 @@ import (
 const JobPostCollName = "JobPosts"
 
 type JobPostStore interface {
-	Dropper
 	GetJobPostByID(context.Context, string) (*types.JobPost, error)
 	GetJobPosts(context.Context, Map) ([]*types.JobPost, error)
 	CreateJobPost(context.Context, *types.JobPost) (*types.JobPost, error)
@@ -26,15 +25,13 @@ type MongoJobStorage struct {
 	coll   *mongo.Collection
 }
 
-func NewMongoJobStore() *MongoJobStorage {
-	client := NewMongoClient()
+func NewMongoJobStore(client *mongo.Client) JobPostStore {
 	return &MongoJobStorage{
 		client: client,
 		coll:   client.Database(DBNAME).Collection(JobPostCollName),
 	}
 }
-func NewMongoJobStoreTest() *MongoJobStorage {
-	client := NewMongoClient()
+func NewMongoJobStoreTest(client *mongo.Client) JobPostStore {
 	return &MongoJobStorage{
 		client: client,
 		coll:   client.Database(TestDBNAME).Collection(JobPostCollName),

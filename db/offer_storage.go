@@ -17,7 +17,7 @@ type OfferStore interface {
 	GetOffers(context.Context, Map) ([]*types.Offer, error)
 	CreateOffer(context.Context, *types.Offer) (*types.Offer, error)
 	DeleteOffer(context.Context, string) error
-	UpdateOffer(context.Context, string, Map) error
+	// UpdateOffer(context.Context, string, Map) error
 }
 
 type MongoOfferStore struct {
@@ -25,13 +25,13 @@ type MongoOfferStore struct {
 	coll   *mongo.Collection
 }
 
-func NewMongoOfferStore(client *mongo.Client) *MongoOfferStore {
+func NewMongoOfferStore(client *mongo.Client) OfferStore {
 	return &MongoOfferStore{
 		client: client,
 		coll:   client.Database(DBNAME).Collection(OfferCollName),
 	}
 }
-func NewMongoOfferStoreTest(client *mongo.Client) *MongoOfferStore {
+func NewMongoOfferStoreTest(client *mongo.Client) OfferStore {
 	return &MongoOfferStore{
 		client: client,
 		coll:   client.Database(TestDBNAME).Collection(UserCollName),
