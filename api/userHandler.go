@@ -47,3 +47,8 @@ func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
 
 	return c.JSON(user)
 }
+
+func (h *UserHandler) HandleGetUsers(c *fiber.Ctx) error {
+
+	return nil
+}
