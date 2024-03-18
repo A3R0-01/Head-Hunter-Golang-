@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	bcryptCost      = 32
+	bcryptCost      = 8
 	minFirstNameLen = 3
 	minLastNameLen  = 3
 	minPasswordLen  = 8
@@ -35,7 +35,7 @@ type User struct {
 	Student           bool               `bson:"Student" json:"Student"`
 	JobSeeker         bool               `bson:"JobSeeker" json:"JobSeeker"`
 	Recruiter         bool               `bson:"Recruiter" json:"Recruiter"`
-	Admin             bool               `bson:"Admin" json:"Admin"`
+	Admin             bool               `bson:"Admin" json:"_"`
 	Created           time.Time          `bson:"Created" json:"Created"`
 }
 type CreateUserParams struct {
