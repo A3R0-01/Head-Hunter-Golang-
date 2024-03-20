@@ -25,11 +25,11 @@ type Company struct {
 	Created      time.Time          `bson:"Created" json:"Created"`
 }
 type CreateCompanyParams struct {
-	Name      string             `bson:"name" json:"name"`
-	Email     []string           `bson:"email" json:"email"`
-	Address   string             `bson:"address" json:"address"`
-	Telephone []string           `bson:"telephone" json:"telephone"`
-	HeadOfHr  primitive.ObjectID `bson:"headOfHr" json:"headOfHr"`
+	Name      string           `bson:"name" json:"name"`
+	Email     []string         `bson:"email" json:"email"`
+	Address   string           `bson:"address" json:"address"`
+	Telephone []string         `bson:"telephone" json:"telephone"`
+	HeadOfHr  CreateUserParams `bson:"headOfHr" json:"headOfHr"`
 }
 type UpdateCompanyParams struct {
 	Name      string   `bson:"name" json:"name"`
@@ -65,8 +65,8 @@ func (c *UpdateCompanyParams) ToMongoBson() (bson.M, error) {
 	return updateParams, nil
 }
 
-func (c *CreateCompanyParams) Validate() map[string]string {
-	errors := map[string]string{}
+func (c *CreateCompanyParams) Validate() map[string]any {
+	errors := map[string]any{}
 
 	for _, email := range c.Email {
 		if !IsEmailValid(email) {
@@ -84,6 +84,10 @@ func (c *CreateCompanyParams) Validate() map[string]string {
 			errors["phone"] = fmt.Sprint("phone number is not valid: ", phone)
 		}
 	}
+	if len(c.HeadOfHr.Validate()) > 0 {
+		errors["headOfHr"] = c.HeadOfHr.Validate()
+	}
+
 	return errors
 }
 func (c *CreateCompanyParams) FromParams() *Company {

@@ -15,8 +15,9 @@ func main() {
 
 	app := fiber.New()
 	var (
-		store       = db.NewStore(client)
-		userHandler = api.NewUserHandler(store, "user handler")
+		store          = db.NewStore(client)
+		userHandler    = api.NewUserHandler(store, "user handler")
+		companyHandler = api.NewCompanyHandler(store, "company handler")
 	)
 	app.Post("/user", userHandler.HandlePostUser)
 	app.Get("/user/:id", userHandler.HandleGetUser)
@@ -24,6 +25,11 @@ func main() {
 	app.Put("/user/:id", userHandler.HandlePut)
 	app.Delete("/user/:id", userHandler.HandleDelete)
 
+	app.Post("/company", companyHandler.HandlePostCompany)
+	app.Get("/company/:id", companyHandler.HandleGetCompany)
+	app.Get("/company", companyHandler.HandleGetCompanies)
+	app.Put("/company/:id", companyHandler.HandlePut)
+	app.Delete("/company/:id", companyHandler.HandleDelete)
 	app.Listen(os.Getenv("HTTP_LISTEN_ADDRESS"))
 
 	// db := db.NewMongoClient()
