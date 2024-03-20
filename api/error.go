@@ -18,3 +18,6 @@ func BadRequest(c *fiber.Ctx, data interface{}) error {
 func InternalServerError(c *fiber.Ctx, data interface{}) error {
 	return c.Status(http.StatusInternalServerError).JSON(data)
 }
+func NotFound(c *fiber.Ctx, data interface{}) error {
+	return c.Status(http.StatusNotFound).JSON(data)
+}

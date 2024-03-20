@@ -85,7 +85,7 @@ func (store *MongoUserStorage) DeleteUser(ctx context.Context, id string) error 
 	}
 	res, err := store.coll.DeleteOne(ctx, bson.M{"_id": oid})
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to delete user")
 	} else if res.DeletedCount == 0 {
 		return mongo.ErrNoDocuments
 	}
@@ -97,11 +97,7 @@ func (store *MongoUserStorage) UpdateUser(ctx context.Context, id string, values
 	if err != nil {
 		return err
 	}
-	update := bson.D{
-		{
-			"$set", updateVal,
-		},
-	}
+	update := bson.M{"$set": updateVal}
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err

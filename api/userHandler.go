@@ -1,9 +1,13 @@
 package api
 
 import (
+	"errors"
+	"net/http"
+
 	"github.com/A3R0-01/head-hunter/db"
 	"github.com/A3R0-01/head-hunter/types"
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type UserHandler struct {
@@ -49,6 +53,37 @@ func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
 }
 
 func (h *UserHandler) HandleGetUsers(c *fiber.Ctx) error {
+	users, err := h.store.GetUsers(c.Context(), db.Map{})
+	if err != nil {
+		return InternalServerError(c, err)
+	}
+	return c.JSON(users)
+}
+
+func (h *UserHandler) HandleDelete(c *fiber.Ctx) error {
+	id := c.Params("id")
+	if err := h.store.UserStore.DeleteUser(c.Context(), id); err != nil {
+		if errors.Is(mongo.ErrNoDocuments, err) {
+			return NotFound(c, ErrorObject{Msg: "user not found", Field: "error"})
+		}
+		return InternalServerError(c, err)
+	}
+	return c.Status(http.StatusOK).JSON("User deleted")
+}
+
+func (h *UserHandler) HandlePut(c *fiber.Ctx) error {
+	var updateParams types.UpdateUserParams
+	id := c.Params("id")
+	if err := c.BodyParser(&updateParams); err != nil {
+		return BadRequest(c, err)
+	}
+
+	if err := h.store.UserStore.UpdateUser(c.Context(), id, updateParams); err != nil {
+		if errors.Is(mongo.ErrNoDocuments, err) {
+			return NotFound(c, ErrorObject{Msg: "user not found", Field: "error"})
+		}
+		return InternalServerError(c, ErrorObject{Msg: "failed to update user", Field: "error"})
+	}
 
 	return nil
 }

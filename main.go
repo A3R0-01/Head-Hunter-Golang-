@@ -20,6 +20,9 @@ func main() {
 	)
 	app.Post("/user", userHandler.HandlePostUser)
 	app.Get("/user/:id", userHandler.HandleGetUser)
+	app.Get("/user", userHandler.HandleGetUsers)
+	app.Put("/user/:id", userHandler.HandlePut)
+	app.Delete("/user/:id", userHandler.HandleDelete)
 
 	app.Listen(os.Getenv("HTTP_LISTEN_ADDRESS"))
 
