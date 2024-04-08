@@ -15,9 +15,10 @@ func main() {
 
 	app := fiber.New()
 	var (
-		store          = db.NewStore(client)
-		userHandler    = api.NewUserHandler(store, "user handler")
-		companyHandler = api.NewCompanyHandler(store, "company handler")
+		store           = db.NewStore(client)
+		userHandler     = api.NewUserHandler(store, "user handler")
+		companyHandler  = api.NewCompanyHandler(store, "company handler")
+		industryHandler = api.NewIndustryHandler(store, "industry handler")
 	)
 	app.Post("/user", userHandler.HandlePostUser)
 	app.Get("/user/:id", userHandler.HandleGetUser)
@@ -31,10 +32,10 @@ func main() {
 	app.Put("/company/:id", companyHandler.HandlePut)
 	app.Delete("/company/:id", companyHandler.HandleDelete)
 
-	app.Post("/industry", companyHandler.HandlePostCompany)
-	app.Get("/industry/:id", companyHandler.HandleGetCompany)
-	app.Get("/industry", companyHandler.HandleGetCompanies)
-	app.Put("/industry/:id", companyHandler.HandlePut)
+	app.Post("/industry", industryHandler.HandlePostIndustry)
+	app.Get("/industry/:id", industryHandler.HandleGetIndustry)
+	app.Get("/industry", industryHandler.HandleGetIndustries)
+	app.Delete("/industry/:id", industryHandler.HandleDelete)
 
 	app.Listen(os.Getenv("HTTP_LISTEN_ADDRESS"))
 
