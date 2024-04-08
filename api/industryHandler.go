@@ -41,12 +41,12 @@ func (h *IndustryHandler) HandlePostIndustry(c *fiber.Ctx) error {
 func (h *IndustryHandler) HandleGetIndustry(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	company, err := h.store.CompanyStore.GetCompanyByID(c.Context(), id)
+	industry, err := h.store.IndustryStore.GetIndustryByID(c.Context(), id)
 	if err != nil {
 		return BadRequest(c, ErrorObject{Msg: err.Error(), Field: "error"})
 	}
 
-	return c.JSON(company)
+	return c.JSON(industry)
 }
 
 func (h *IndustryHandler) HandleGetIndustries(c *fiber.Ctx) error {
