@@ -50,37 +50,37 @@ func (h *IndustryHandler) HandleGetIndustry(c *fiber.Ctx) error {
 }
 
 func (h *IndustryHandler) HandleGetIndustries(c *fiber.Ctx) error {
-	companies, err := h.store.GetCompanies(c.Context(), db.Map{})
+	industries, err := h.store.IndustryStore.GetIndustries(c.Context(), db.Map{})
 	if err != nil {
 		return InternalServerError(c, err)
 	}
-	return c.JSON(companies)
+	return c.JSON(industries)
 }
 
 func (h *IndustryHandler) HandleDelete(c *fiber.Ctx) error {
 	id := c.Params("id")
-	if err := h.store.CompanyStore.DeleteCompany(c.Context(), id); err != nil {
+	if err := h.store.IndustryStore.DeleteIndustry(c.Context(), id); err != nil {
 		if errors.Is(mongo.ErrNoDocuments, err) {
-			return NotFound(c, ErrorObject{Msg: "company not found", Field: "error"})
+			return NotFound(c, ErrorObject{Msg: "industry not found", Field: "error"})
 		}
 		return InternalServerError(c, err)
 	}
-	return c.Status(http.StatusOK).JSON("Company deleted")
+	return c.Status(http.StatusOK).JSON("Industry deleted")
 }
 
-func (h *IndustryHandler) HandlePut(c *fiber.Ctx) error {
-	var updateParams types.UpdateCompanyParams
-	id := c.Params("id")
-	if err := c.BodyParser(&updateParams); err != nil {
-		return BadRequest(c, err)
-	}
+// func (h *IndustryHandler) HandlePut(c *fiber.Ctx) error {
+// 	var updateParams types.UpdateIndustryParams
+// 	id := c.Params("id")
+// 	if err := c.BodyParser(&updateParams); err != nil {
+// 		return BadRequest(c, err)
+// 	}
 
-	if err := h.store.CompanyStore.UpdateCompany(c.Context(), id, updateParams); err != nil {
-		if errors.Is(mongo.ErrNoDocuments, err) {
-			return NotFound(c, ErrorObject{Msg: "company not found", Field: "error"})
-		}
-		return InternalServerError(c, ErrorObject{Msg: "failed to update company", Field: "error"})
-	}
+// 	if err := h.store.IndustryStore.UpdateIndustry(c.Context(), id, updateParams); err != nil {
+// 		if errors.Is(mongo.ErrNoDocuments, err) {
+// 			return NotFound(c, ErrorObject{Msg: "industry not found", Field: "error"})
+// 		}
+// 		return InternalServerError(c, ErrorObject{Msg: "failed to update industry", Field: "error"})
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
