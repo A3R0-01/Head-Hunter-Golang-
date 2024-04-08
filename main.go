@@ -30,6 +30,12 @@ func main() {
 	app.Get("/company", companyHandler.HandleGetCompanies)
 	app.Put("/company/:id", companyHandler.HandlePut)
 	app.Delete("/company/:id", companyHandler.HandleDelete)
+
+	app.Post("/industry", companyHandler.HandlePostCompany)
+	app.Get("/industry/:id", companyHandler.HandleGetCompany)
+	app.Get("/industry", companyHandler.HandleGetCompanies)
+	app.Put("/industry/:id", companyHandler.HandlePut)
+
 	app.Listen(os.Getenv("HTTP_LISTEN_ADDRESS"))
 
 	// db := db.NewMongoClient()
