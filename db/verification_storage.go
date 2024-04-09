@@ -15,8 +15,10 @@ type VerificationStore interface {
 	GetVerifications(context.Context, Map) ([]*types.Verification, error)
 	CreateVerification(context.Context, *types.Verification) (*types.Verification, error)
 	DeleteVerification(context.Context, string) error
-	// UpdateVerification(context.Context, string, types.UpdateVerificaParams) error
+	// UpdateVerification(context.Context, string, types.UpdateVerificationParams) error
 }
+
+var VerificationCollName = "Verifcation"
 
 type MongoVerificationStore struct {
 	client *mongo.Client
@@ -26,13 +28,13 @@ type MongoVerificationStore struct {
 func NewMongoVerificationStore(client *mongo.Client) VerificationStore {
 	return &MongoVerificationStore{
 		client: client,
-		coll:   client.Database(DBNAME).Collection(UserCollName),
+		coll:   client.Database(DBNAME).Collection(VerificationCollName),
 	}
 }
 func NewMongoVerificationStoreTest(client *mongo.Client) VerificationStore {
 	return &MongoVerificationStore{
 		client: client,
-		coll:   client.Database(TestDBNAME).Collection(UserCollName),
+		coll:   client.Database(TestDBNAME).Collection(VerificationCollName),
 	}
 }
 
