@@ -3,6 +3,7 @@ package api
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/A3R0-01/head-hunter/db"
 	"github.com/A3R0-01/head-hunter/types"
@@ -54,7 +55,15 @@ func (h *CompanyHandler) HandlePostCompany(c *fiber.Ctx) error {
 	if err != nil {
 		return InternalServerError(c, err)
 	}
-	return c.JSON(companyCreated)
+	verification := &types.Verification{
+		CompanyID: companyCreated.ID,
+		Created:   time.Now(),
+	}
+	_, err = h.store.CreateVerification(c.Context(), verification)
+	if err != nil {
+		return InternalServerError(c, err)
+	}
+	return c.JSON(map[string]any{"company": companyCreated, "verication": "please verify your company"})
 }
 
 func (h *CompanyHandler) HandleGetCompany(c *fiber.Ctx) error {
