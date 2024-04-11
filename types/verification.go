@@ -61,24 +61,25 @@ func (u *UpdateVerificationParams) Validate() error {
 	return nil
 }
 
-func (u *UpdateVerificationParams) ToUpdateMongo() (update bson.M, err error) {
-	update = bson.M{}
-	_, err = primitive.ObjectIDFromHex(u.EmployeeID)
-	if err != nil {
-		err = fmt.Errorf("invalid user")
-	} else {
+func (u *UpdateVerificationParams) ToUpdateMongo() (bson.M, []error) {
+	update := bson.M{}
+	errors := []error{}
+	_, err := primitive.ObjectIDFromHex(u.EmployeeID)
+	if err == nil {
 		update["EmployeeID"] = u.EmployeeID
+	} else {
+		errors = append(errors, err)
 	}
 	_, err = primitive.ObjectIDFromHex(u.Document)
-	if err != nil {
-		err = fmt.Errorf("invalid file")
-	} else {
+	if err == nil {
 		update["Document"] = u.Document
-	}
-	if u.ValidTill.Before(time.Now()) {
-		err = fmt.Errorf("invalid time")
 	} else {
-		update["ValidTill"] = u.ValidTill
+		errors = append(errors, err)
 	}
-	return
+	if u.ValidTill.After(time.Now()) {
+		update["ValidTill"] = u.ValidTill
+	} else {
+		errors = append(errors, err)
+	}
+	return update, errors
 }
