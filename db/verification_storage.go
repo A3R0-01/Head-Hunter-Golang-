@@ -15,7 +15,7 @@ type VerificationStore interface {
 	GetVerifications(context.Context, Map) ([]*types.Verification, error)
 	CreateVerification(context.Context, *types.Verification) (*types.Verification, error)
 	DeleteVerification(context.Context, string) error
-	// UpdateVerification(context.Context, string, types.UpdateVerificationParams) error
+	UpdateVerification(context.Context, string, types.UpdateVerificationParams) error
 }
 
 var VerificationCollName = "Verifcation"
@@ -89,19 +89,19 @@ func (store *MongoVerificationStore) DeleteVerification(ctx context.Context, id 
 
 }
 
-// func (store *MongoVerificationStore) UpdateVerification(ctx context.Context, id string, values types.UpdateVerificationParams) error {
-// 	updateVal, err := values.ToUpdateMongo()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	update := bson.M{"$set": updateVal}
-// 	oid, err := primitive.ObjectIDFromHex(id)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	_, err = store.coll.UpdateOne(ctx, bson.M{"_id": oid}, update)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func (store *MongoVerificationStore) UpdateVerification(ctx context.Context, id string, values types.UpdateVerificationParams) error {
+	updateVal, err := values.ToUpdateMongo()
+	if len(err) >= 3 {
+		return fmt.Errorf(fmt.Sprint(err))
+	}
+	update := bson.M{"$set": updateVal}
+	oid, err2 := primitive.ObjectIDFromHex(id)
+	if err2 != nil {
+		return err2
+	}
+	_, err3 := store.coll.UpdateOne(ctx, bson.M{"_id": oid}, update)
+	if err3 != nil {
+		return err3
+	}
+	return nil
+}
