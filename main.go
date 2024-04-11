@@ -40,6 +40,10 @@ func main() {
 
 	app.Get("/verification/:id", verificationHandler.HandleGetVerification)
 	app.Get("/verification", verificationHandler.HandleGetVerifications)
+
+	// Administrative handlers
+	app.Put("/verification/:id", verificationHandler.HandlePut)
+	app.Post("/verification", verificationHandler.HandlePostVerification)
 	app.Delete("/verification/:id", verificationHandler.HandleDelete)
 
 	app.Listen(os.Getenv("HTTP_LISTEN_ADDRESS"))
