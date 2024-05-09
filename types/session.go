@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -15,7 +16,6 @@ type Session struct {
 	Created   time.Time          `bson:"Created" json:"Created"`
 }
 type CreateSessionParams struct {
-	ID        string `json:"ID,omitempty"`
 	Recruiter string `json:"Recruiter"`
 	JobSeeker string `json:"JobSeeker"`
 	Open      bool   `json:"Open"`
@@ -24,7 +24,7 @@ type CreateSessionParams struct {
 func (c *CreateSessionParams) FromParams() (*Session, error) {
 	oidRecruiter, err := primitive.ObjectIDFromHex(c.Recruiter)
 	if err != nil {
-		return nil, fmt.Errorf("invalid user")
+		return nil, fmt.Errorf("invalid session")
 
 	}
 	oidJobSeeker, err := primitive.ObjectIDFromHex(c.JobSeeker)
@@ -37,4 +37,14 @@ func (c *CreateSessionParams) FromParams() (*Session, error) {
 		Open:      true,
 		Created:   time.Now(),
 	}, nil
+}
+
+type UpdateSessionParams struct {
+	Open bool `json:"Open"`
+}
+
+func (u *UpdateSessionParams) ToUpdateMongo() bson.M {
+	return bson.M{
+		"Open": u.Open,
+	}
 }
