@@ -20,31 +20,39 @@ func main() {
 		companyHandler      = api.NewCompanyHandler(store, "company handler")
 		industryHandler     = api.NewIndustryHandler(store, "industry handler")
 		verificationHandler = api.NewVerificationHandler(store, "verification handler")
+		sessionHandler      = api.NewSessionHandler(store, "session Handler")
 	)
+	// UserHandlers
 	app.Post("/user", userHandler.HandlePostUser)
 	app.Get("/user/:id", userHandler.HandleGetUser)
 	app.Get("/user", userHandler.HandleGetUsers)
 	app.Put("/user/:id", userHandler.HandlePut)
 	app.Delete("/user/:id", userHandler.HandleDelete)
-
+	// Company Handlers
 	app.Post("/company", companyHandler.HandlePostCompany)
 	app.Get("/company/:id", companyHandler.HandleGetCompany)
 	app.Get("/company", companyHandler.HandleGetCompanies)
 	app.Put("/company/:id", companyHandler.HandlePut)
 	app.Delete("/company/:id", companyHandler.HandleDelete)
-
+	// Industry Handlers
 	app.Post("/industry", industryHandler.HandlePostIndustry)
 	app.Get("/industry/:id", industryHandler.HandleGetIndustry)
 	app.Get("/industry", industryHandler.HandleGetIndustries)
 	app.Delete("/industry/:id", industryHandler.HandleDelete)
-
+	// Verification Handlers
 	app.Get("/verification/:id", verificationHandler.HandleGetVerification)
 	app.Get("/verification", verificationHandler.HandleGetVerifications)
+	// Session Handlers
+	app.Post("/session", sessionHandler.HandlePostSession)
+	app.Get("/session/:id", sessionHandler.HandleGetSession)
+	app.Get("/session", sessionHandler.HandleGetSessions)
+	app.Put("/session/:id", sessionHandler.HandlePut)
 
 	// Administrative handlers
 	app.Put("/verification/:id", verificationHandler.HandlePut)
 	app.Post("/verification", verificationHandler.HandlePostVerification)
 	app.Delete("/verification/:id", verificationHandler.HandleDelete)
+	app.Delete("/session/:id", sessionHandler.HandleDelete) // sessions
 
 	app.Listen(os.Getenv("HTTP_LISTEN_ADDRESS"))
 
