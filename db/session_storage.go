@@ -16,7 +16,7 @@ type SessionStore interface {
 	GetSessionByID(context.Context, string) (*types.Session, error)
 	GetSessions(context.Context, Map) ([]*types.Session, error)
 	CreateSession(context.Context, *types.Session) (*types.Session, error)
-	UpdateSession(context.Context, string) error
+	UpdateSession(context.Context, string, *types.UpdateSessionParams) error
 	DeleteSession(context.Context, string) error
 }
 
@@ -89,8 +89,8 @@ func (store *MongoSessionStore) DeleteSession(ctx context.Context, id string) er
 
 }
 
-func (store *MongoSessionStore) UpdateSession(ctx context.Context, id string) error {
-	update := bson.M{"$set": bson.M{"Open": false}}
+func (store *MongoSessionStore) UpdateSession(ctx context.Context, id string, updateParams *types.UpdateSessionParams) error {
+	update := bson.M{"$set": updateParams}
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
