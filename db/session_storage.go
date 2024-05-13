@@ -90,7 +90,7 @@ func (store *MongoSessionStore) DeleteSession(ctx context.Context, id string) er
 }
 
 func (store *MongoSessionStore) UpdateSession(ctx context.Context, id string, updateParams *types.UpdateSessionParams) error {
-	update := bson.M{"$set": updateParams}
+	update := bson.M{"$set": updateParams.ToUpdateMongo()}
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
