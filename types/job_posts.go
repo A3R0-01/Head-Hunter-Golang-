@@ -42,7 +42,7 @@ type CreateJobPostParams struct {
 	Location          string    `bson:"Location" json:"Location"`
 	Introduction      string    `bson:"Introduction" json:"Introduction"`
 	Duties            []string  `bson:"Duties" json:"Duties"`
-	Qualifications    []string  `bson:"Education" json:"Education"`
+	Qualifications    []string  `bson:"Qualifications" json:"Qualifications"`
 	Notes             []string  `bson:"Notes" json:"Notes"`
 	EasyApply         bool      `bson:"EasyApply" json:"EasyApply"`
 	HowToApply        string    `bson:"HowToApply" json:"HowToApply"`
@@ -55,7 +55,7 @@ type UpdateJobPostParams struct {
 	Location          string    `bson:"Location" json:"Location"`
 	Introduction      string    `bson:"Introduction" json:"Introduction"`
 	Duties            []string  `bson:"Duties" json:"Duties"`
-	Qualifications    []string  `bson:"Education" json:"Education"`
+	Qualifications    []string  `bson:"Qualifications" json:"Qualifications"`
 	Notes             []string  `bson:"Notes" json:"Notes"`
 	EasyApply         bool      `bson:"EasyApply" json:"EasyApply"`
 	HowToApply        string    `bson:"HowToApply" json:"HowToApply"`
@@ -191,3 +191,25 @@ func (j *CreateJobPostParams) FromParams() (*JobPost, error) {
 		Created:           time.Now(),
 	}, nil
 }
+
+// "Recruiter": "663cc1d42089210989f3a068",
+// "Title": "Test Subject",
+// "Location":"Nyanga, Zimbabwe",
+// "Introduction": "blaaaaah blaaaaah blaaaaahjjjjjj",
+// "Duties": ["blaaaaah blaaaaah", "blaaaaah","blaaaaah blaaaaah", "blaaaaah","blaaaaah blaaaaah", "blaaaaah", "gggggggggggg"],
+// "Qualifications": ["blaaaaah blaaaaah", "blaaaaah","blaaaaah blaaaaah", "blaaaaah","blaaaaah blaaaaah", "blaaaaah", "gggggglglglgl"],
+// "Notes": ["blaaaaah tadah"],
+// "EasyApply": true,
+// "HowToApply": "kdkdkdkdkdklllll",
+// "MaximumApplicants": 100,
+// "Industry": "66152fa1d8b46a6d5714c6ea",
+// "DueDate": "2024-05-25T08:00:00.0Z"
+
+// "Title": "Test Subject",
+// "Location":"Nyanga, Zimbabwe",
+// "Duties": ["blaaaaah blaaaaah", "blaaaaah","blaaaaah blaaaaah", "blaaaaah","blaaaaah blaaaaah", "blaaaaah", "gggggggggggg"],
+// "Qualifications": ["blaaaaah blaaaaah", "blaaaaah","blaaaaah blaaaaah", "blaaaaah","blaaaaah blaaaaah", "blaaaaah", "gggggglglglgl"],
+// "EasyApply": true,
+// "HowToApply": "kdkdkdkdkdklllll",
+// "MaximumApplicants": 100,
+// "DueDate": "2024-05-25T08:00:00.0Z"

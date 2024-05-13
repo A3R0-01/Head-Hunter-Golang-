@@ -91,13 +91,16 @@ func (store *MongoJobStorage) DeleteJobPost(ctx context.Context, id string) erro
 func (store *MongoJobStorage) UpdateJobPost(ctx context.Context, id string, values types.UpdateJobPostParams) error {
 	updateVal, err := values.ToMongoBson()
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 	update := bson.M{"$set": updateVal}
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
+	fmt.Println("reached")
 	_, err = store.coll.UpdateOne(ctx, bson.M{"_id": oid}, update)
 	if err != nil {
 		return err
