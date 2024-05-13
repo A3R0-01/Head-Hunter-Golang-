@@ -46,12 +46,12 @@ func main() {
 	app.Post("/session", sessionHandler.HandlePostSession)
 	app.Get("/session/:id", sessionHandler.HandleGetSession)
 	app.Get("/session", sessionHandler.HandleGetSessions)
-	app.Put("/session/:id", sessionHandler.HandlePut)
 
 	// Administrative handlers
 	app.Put("/verification/:id", verificationHandler.HandlePut)
 	app.Post("/verification", verificationHandler.HandlePostVerification)
 	app.Delete("/verification/:id", verificationHandler.HandleDelete)
+	app.Put("/session/:id", sessionHandler.HandlePut)
 	app.Delete("/session/:id", sessionHandler.HandleDelete) // sessions
 
 	app.Listen(os.Getenv("HTTP_LISTEN_ADDRESS"))

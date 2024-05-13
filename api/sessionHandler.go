@@ -43,6 +43,9 @@ func (h *SessionHandler) HandleGetSession(c *fiber.Ctx) error {
 
 	session, err := h.store.SessionStore.GetSessionByID(c.Context(), id)
 	if err != nil {
+		if errors.Is(mongo.ErrNoDocuments, err) {
+			return NotFound(c, ErrorObject{Msg: "Session Not Found", Field: "error"})
+		}
 		return BadRequest(c, ErrorObject{Msg: err.Error(), Field: "error"})
 	}
 
