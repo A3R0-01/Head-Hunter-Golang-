@@ -16,12 +16,13 @@ func main() {
 	app := fiber.New()
 	var (
 		store               = db.NewStore(client)
-		userHandler         = api.NewUserHandler(store, "user handler")
 		companyHandler      = api.NewCompanyHandler(store, "company handler")
-		industryHandler     = api.NewIndustryHandler(store, "industry handler")
 		verificationHandler = api.NewVerificationHandler(store, "verification handler")
-		sessionHandler      = api.NewSessionHandler(store, "session Handler")
+		industryHandler     = api.NewIndustryHandler(store, "industry handler")
+		userHandler         = api.NewUserHandler(store, "user handler")
 		jobPostHandler      = api.NewJobPostHandler(store, "job post handler")
+		applicationHandler  = api.NewApplicationHandler(store, "application handler")
+		sessionHandler      = api.NewSessionHandler(store, "session Handler")
 	)
 	// UserHandlers
 	app.Post("/user", userHandler.HandlePostUser)
@@ -52,6 +53,12 @@ func main() {
 	app.Put("/jobPost/:id", jobPostHandler.HandlePut)
 	app.Post("/jobPost", jobPostHandler.HandlePostJobPost)
 	app.Delete("/jobPost/:id", jobPostHandler.HandleDelete)
+
+	// Application Handlers
+	app.Get("/application/:id", applicationHandler.HandleGetApplication)
+	app.Get("/application", applicationHandler.HandleGetApplications)
+	app.Post("/application", applicationHandler.HandlePostApplication)
+	app.Delete("/application/:id", applicationHandler.HandleDelete)
 
 	// Session Handlers
 	app.Post("/session", sessionHandler.HandlePostSession)
