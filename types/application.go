@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -60,11 +61,31 @@ func (c *CreateApplicationParams) FromParams() (*Application, error) {
 	return &Application{
 		JobSeeker:   oidJobSeeker,
 		JobPost:     oidJobPost,
-		Qualified:   c.Qualified,
-		Failed:      c.Failed,
+		Qualified:   false,
+		Failed:      false,
 		Resume:      oidResume,
 		CoverLetter: oidCoverLetter,
 		Additional:  oidAdditionalList,
 		Created:     time.Now(),
 	}, nil
+}
+
+type UpdateApplicationParams struct {
+	Qualified bool `bson:"Qualified" json:"Qualified"`
+	Failed    bool `bson:"Qualified" json:"Failed"`
+}
+
+func (u *UpdateApplicationParams) Validate() error {
+
+	if (u.Failed == true && u.Qualified == true) || (u.Failed == false && u.Qualified == false) {
+		return fmt.Errorf("one cannot pass and fail at the same time")
+	}
+
+	return nil
+}
+func (u *UpdateApplicationParams) ToMongoBson() bson.M {
+	return bson.M{
+		"Qualified": u.Qualified,
+		"Failed":    u.Failed,
+	}
 }
