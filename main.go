@@ -23,6 +23,7 @@ func main() {
 		jobPostHandler      = api.NewJobPostHandler(store, "job post handler")
 		applicationHandler  = api.NewApplicationHandler(store, "application handler")
 		sessionHandler      = api.NewSessionHandler(store, "session Handler")
+		messageHandler      = api.NewMessageHandler(store, "message handler")
 	)
 	// UserHandlers
 	app.Post("/user", userHandler.HandlePostUser)
@@ -58,9 +59,18 @@ func main() {
 	app.Get("/application/:id", applicationHandler.HandleGetApplication)
 	app.Get("/application", applicationHandler.HandleGetApplications)
 	app.Post("/application", applicationHandler.HandlePostApplication)
+	app.Put("/recruiter/application/:id", applicationHandler.HandlePut)
 	app.Delete("/application/:id", applicationHandler.HandleDelete)
 
+	// Message Handlers
+
+	app.Post("/message", messageHandler.HandlePostMessage)
+	app.Get("/message/:id", messageHandler.HandleGetMessage)
+	app.Get("/message", messageHandler.HandleGetMessages)
+	app.Delete("/message/:id", messageHandler.HandleDelete)
+
 	// Session Handlers
+
 	app.Post("/session", sessionHandler.HandlePostSession)
 	app.Get("/session/:id", sessionHandler.HandleGetSession)
 	app.Get("/session", sessionHandler.HandleGetSessions)
