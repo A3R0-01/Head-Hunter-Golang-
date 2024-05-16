@@ -17,6 +17,7 @@ type ApplicationStore interface {
 	GetApplications(context.Context, Map) ([]*types.Application, error)
 	CreateApplication(context.Context, *types.Application) (*types.Application, error)
 	DeleteApplication(context.Context, string) error
+	UpdateApplication(context.Context, string, types.UpdateApplicationParams) error
 }
 type MongoApplicationStore struct {
 	client *mongo.Client
@@ -81,6 +82,20 @@ func (store *MongoApplicationStore) DeleteApplication(ctx context.Context, id st
 		return err
 	} else if res.DeletedCount == 0 {
 		return mongo.ErrNoDocuments
+	}
+	return nil
+}
+
+func (store *MongoApplicationStore) UpdateApplication(ctx context.Context, id string, values types.UpdateApplicationParams) error {
+	updateValues := values.ToMongoBson()
+	update := bson.M{"$set": updateValues}
+	oid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+	_, err = store.coll.UpdateOne(ctx, bson.M{"_id": oid}, update)
+	if err != nil {
+		return err
 	}
 	return nil
 }

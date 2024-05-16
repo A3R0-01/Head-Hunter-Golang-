@@ -67,3 +67,23 @@ func (h *ApplicationHandler) HandleDelete(c *fiber.Ctx) error {
 	}
 	return c.Status(http.StatusOK).JSON("Application deleted")
 }
+
+func (h *ApplicationHandler) HandlePut(c *fiber.Ctx) error {
+	var updateParams types.UpdateApplicationParams
+	id := c.Params("id")
+	if err := c.BodyParser(&updateParams); err != nil {
+		return BadRequest(c, err)
+	}
+	if err := updateParams.Validate(); err != nil {
+		return BadRequest(c, ErrorObject{Msg: err.Error(), Field: "error"})
+	}
+
+	if err := h.store.ApplicationStore.UpdateApplication(c.Context(), id, updateParams); err != nil {
+		if errors.Is(mongo.ErrNoDocuments, err) {
+			return NotFound(c, ErrorObject{Msg: "application not found", Field: "error"})
+		}
+		return InternalServerError(c, ErrorObject{Msg: "failed to update application", Field: "error"})
+	}
+
+	return nil
+}
